@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+    </head>
+    <style>
+        .box {
+            width: 500px;
+            height: 300px;
+            border: 1px solid red;
+            position: relative;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .container img {
+            width: 100%;
+            height: 100%;
+        }
+        .page {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+            display: flex;
+        }
+        .page span {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+        .but {
+            position: fixed;
+            right: 100px;
+            bottom: 30px;
+        }
+        .boxes {
+            background: red;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .close {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            display: none;
+        }
+    </style>
+    <body>
+        <div class="box">
+            <div class="container">
+                <img src="./img0.jpg" alt="" />
+                <img src="./img1.jpg" alt="" />
+                <img src="./img2.jpg" alt="" />
+                <img src="./img3.jpg" alt="" />
+                <img src="./img0.jpg" alt="" />
+            </div>
+            <div onc class="page">
+                <span class="0"></span>
+                <span class="1"></span>
+                <span class="2"></span>
+                <span class="3"></span>
+            </div>
+        </div>
+        <div class="but">
+            <button onclick="open1()">点击打开</button>
+            <div class="boxes">
+                <span class="close" onclick="close2()">x</span>
+            </div>
+        </div>
+    </body>
+    <script>
+        let container = document.getElementsByClassName('container')[0];
+        let close1 = document.getElementsByClassName('close')[0];
+        let boxes = document.getElementsByClassName('boxes')[0];
+        let page = document.getElementsByClassName('page')[0];
+        let imgs = document.querySelectorAll('.container img');
+        let timer1 = null;
+        let width = container.offsetWidth;
+        let count = 1;
+        let speed = 2;
+        container.style.left = 0;
+        timer1 = setInterval(() => {
+            if (parseInt(container.style.left) > -width * count) {
+                container.style.left = parseInt(container.style.left) - speed + 'px';
+                if (parseInt(container.style.left) === -width * count) {
+                    count++;
+                }
+            }
+            if (count > imgs.length - 1) {
+                count = 1;
+                container.style.left = 0;
+                return;
+            }
+        }, 30);
+        page.addEventListener('click', e => {
+            if (e.target.nodeName === 'SPAN') {
+                clearInterval(timer1);
+                container.style.left = -e.target.className * width + 'px';
+            }
+        });
+        function open1() {
+            speed = 10;
+            boxes.style.width = 0;
+            boxes.style.height = '5px';
+            boxes.style.top = 0;
+            let openTimer = null;
+            openTimer = setInterval(() => {
+                if (boxes.style.width !== '100px') {
+                    boxes.style.width = parseInt(boxes.style.width) + speed + 'px';
+                }
+                if (boxes.style.width === '100px' && parseInt(boxes.style.top) > -200) {
+                    boxes.style.height = parseInt(boxes.style.height) + speed + 'px';
+                    boxes.style.top = -parseInt(boxes.style.height) + -speed + 'px';
+                }
+                if (parseInt(boxes.style.top) < -200) {
+                    console.log(close1);
+                    close1.style.display = 'block';
+                    clearInterval(openTimer);
+                }
+            }, 30);
+        }
+        function close2() {
+            setInterval(() => {
+                if (parseInt(boxes.style.top) < 5) {
+                    close1.style.display = 'none';
+                    boxes.style.height = parseInt(boxes.style.height) - speed + 'px';
+                    boxes.style.top = -parseInt(boxes.style.height) - -speed + 'px';
+                }
+                if (boxes.style.width !== '0px' && parseInt(boxes.style.top) === 5) {
+                    boxes.style.width = parseInt(boxes.style.width) - speed + 'px';
+                }
+            }, 30);
+        }
+    </script>
+</html>
